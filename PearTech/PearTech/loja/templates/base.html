@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PearTech</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %} <!-- Importa o arquivo navbar.html, que contém a -->
+    {% block body %}            <!-- barra de navegação do site. -->
+
+    {% endblock %}
+</body>
+</html>
