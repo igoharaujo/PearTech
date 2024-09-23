@@ -78,5 +78,10 @@ class ItensPedido(models.Model):
     pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para ItemEstoquPedido
 
-    
+class Banner(models.Model):
+    imagem = models.ImageField(null=True, blank=True)
+    link_destino = models.CharField(max_length=400, null=True, blank=True)
+    ativo = models.BooleanField(default=False)
 
+    def __str__(self):
+       return f"{self.link_destino} - Ativo: {self.ativo}" 
