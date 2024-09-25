@@ -9,9 +9,8 @@ def homepage(request):
     banners = Banner.objects.filter(ativo=True)
     context = {"banners" : banners}
     return render(request, 'homepage.html', context)
-
-def loja(request, nome_categoria=None):
-    print(nome_categoria)
+    
+def loja(request):
     produtos = Produto.objects.filter(ativo=True)
     context = { "produtos" : produtos }
     return render(request, 'loja.html', context)

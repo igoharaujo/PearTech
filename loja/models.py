@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 #Criação de Tabelas:
-
+ 
 class Cliente(models.Model): 
     nome = models.CharField(max_length=200, null=True, blank=True) 
     email = models.CharField(max_length=200, null=True, blank=True)
