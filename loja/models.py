@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 #Criação de Tabelas:
- 
+
 class Cliente(models.Model): 
     nome = models.CharField(max_length=200, null=True, blank=True) 
     email = models.CharField(max_length=200, null=True, blank=True)
@@ -41,13 +41,24 @@ class Produto(models.Model):
     def __str__(self) -> str: # Define o método que mostra o nome no /admin/
         return f"Nome: {self.nome}, Categoria: {self.categoria}, Tipo: {self.tipo}, Preço: {self.preco}"
 
+class Cor(models.Model):
+    nome = models.CharField(max_length=200, null=True, blank=True)
+    codigo = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self) -> str:
+        return str(self.nome)
 class ItemEstoque(models.Model):
-    cor = models.CharField(max_length=200, null=True, blank=True)
     tamanho = models.CharField(max_length=200, null=True, blank=True)
     quantidade = models.IntegerField(default=0)
 
+    cor = models.ForeignKey(Cor, null=True, blank=True, on_delete=models.SET_NULL)
+
     produto = models.ForeignKey(Produto, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para Produto
+
+    def __str__(self) -> str: # Define o método que mostra o nome no /admin/
+        return f"{self.produto.nome} Cor: {self.cor.nome}"
+
 
 class Endereco(models.Model):
     rua = models.CharField(max_length=400, null=True, blank=True)
@@ -83,5 +94,5 @@ class Banner(models.Model):
     link_destino = models.CharField(max_length=400, null=True, blank=True)
     ativo = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
        return f"{self.link_destino} - Ativo: {self.ativo}" 

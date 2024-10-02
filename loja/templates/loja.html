@@ -7,11 +7,11 @@
 
 {% for produto in produtos %}
 
-<img src="{{ produto.imagem.url }}" width="330" height="490">
+<a href="{% url 'ver_produto' produto.id %}">
+    <img src="{{ produto.imagem.url }}" width="330" height="490">
+</a>
 <p>Produto: {{ produto.nome }}</p>
 <p>Preço: {{ produto.preco }}</p>
-
-
 
 {% endfor %}
 
