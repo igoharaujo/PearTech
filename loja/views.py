@@ -17,20 +17,28 @@ def loja(request, nome_categoria=None):
     context = { "produtos" : produtos }
     return render(request, 'loja.html', context)
 
-def ver_produto(request, id_produto):
+def ver_produto(request, id_produto, id_cor=None):
+    tem_estoque = False
+    cores = {}
+    tamanhos = {}
+    nome_cor_selecionada = None
     produto = Produto.objects.get(id=id_produto)
     itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0)
     if len(itens_estoque) > 0:
         tem_estoque = True
         cores = [item.cor for item in itens_estoque] # Armazena as cores de cada item no estoque
-    else:
-        tem_estoque = False
-        cores = []
+        if id_cor:
+            cor = Cor.objects.get(id=id_cor)
+            nome_cor_selecionada = cor.nome
+            itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0, cor__id=id_cor)
+            tamanhos = {item.tamanho for item in itens_estoque} # Fazer isso para MODELOS
     context = {
                 "produto": produto, 
                 "itens_estoque": itens_estoque, 
                 "tem_estoque": tem_estoque, 
-                "cores": cores
+                "cores": cores,
+                "tamanhos": tamanhos,
+                "nome_cor_selecionada": nome_cor_selecionada
                }
     return render(request, "ver_produto.html", context)
 
