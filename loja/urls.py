@@ -10,5 +10,11 @@ urlpatterns = [
     path('minhaconta/', minhaconta, name="minha_conta"),
     path('login/', login, name="login"),
     path('carrinho/', carrinho, name="carrinho"), 
+    path('adicionar-carrinho/<int:id_produto>/', adicionar_carrinho, name="adicionar_carrinho"), 
     path('checkout/', checkout, name='checkout'),
 ]
+
+# path('loja/<str:nome_categoria>/', loja, name="loja")
+
+# Sempre que houver um parâmetro como '<str:nome_categoria>', ele 
+# deve ser adicionado na chamada da função correspondente ao url

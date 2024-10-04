@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
 
 # A cada nova pag HTML em /templates uma função com o nome da página 
@@ -20,37 +20,56 @@ def loja(request, nome_categoria=None):
 def ver_produto(request, id_produto, id_cor=None):
     tem_estoque = False
     cores = {}
-    tamanhos = {}
-    nome_cor_selecionada = None
+    modelos = {}
+    cor_selecionada = None
+    if id_cor:
+        cor_selecionada = Cor.objects.get(id=id_cor)
     produto = Produto.objects.get(id=id_produto)
     itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0)
     if len(itens_estoque) > 0:
         tem_estoque = True
         cores = [item.cor for item in itens_estoque] # Armazena as cores de cada item no estoque
         if id_cor:
-            cor = Cor.objects.get(id=id_cor)
-            nome_cor_selecionada = cor.nome
             itens_estoque = ItemEstoque.objects.filter(produto=produto, quantidade__gt=0, cor__id=id_cor)
-            tamanhos = {item.tamanho for item in itens_estoque} # Fazer isso para MODELOS
+            modelos = {item.modelo for item in itens_estoque} # Fazer isso para MODELOS
     context = {
-                "produto": produto, 
-                "itens_estoque": itens_estoque, 
+                "produto": produto,  
                 "tem_estoque": tem_estoque, 
                 "cores": cores,
-                "tamanhos": tamanhos,
-                "nome_cor_selecionada": nome_cor_selecionada
+                "modelos": modelos,
+                "cor_selecionada": cor_selecionada
                }
     return render(request, "ver_produto.html", context)
 
 def carrinho(request):
-    return render(request, 'carrinho.html')
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
+    pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+    itens_pedido = ItensPedido.objects.filter(pedido=pedido)
+    context = {"itens_pedido":itens_pedido,
+               "pedido":pedido}
+    return render(request, 'carrinho.html', context)
+
+def adicionar_carrinho(request, id_produto):
+    if request.method == "POST" and id_produto:
+        dados = request.POST.dict()
+        print(dados)
+        modelo = dados.get("modelo") # Caso o valor nao seja encontrado, retornara None
+        id_cor = dados.get("cor")
+        if not modelo:
+            return redirect('loja')
+        return redirect('carrinho')
+    else:
+        return redirect('loja')
 
 def checkout(request):
     return render(request, 'checkout.html')
 
-# Relacionados a login e conta do usuario
+# Funções relacionadas a login e conta do usuario
 def minhaconta(request):
     return render(request, 'usuario/minhaconta.html')
 
 def login(request):
     return render(request, 'usuario/login.html')
+
+# TODO Sempre que um USER criar uma conta, um cliente será criado para ele

@@ -13,7 +13,7 @@ class Cliente(models.Model):
     # DELETE CASCADE!!! CUIDADO!!!
 
     def __str__(self) -> str: # Define o método que mostra o nome no /admin/
-        return str(self.nome)
+        return str(self.email)
 
 class Categoria(models.Model): # Celular, fone, carregador, capinha, etc
     nome = models.CharField(max_length=200, null=True, blank=True)
@@ -48,7 +48,7 @@ class Cor(models.Model):
     def __str__(self) -> str:
         return str(self.nome)
 class ItemEstoque(models.Model):
-    tamanho = models.CharField(max_length=200, null=True, blank=True)
+    modelo = models.CharField(max_length=200, null=True, blank=True)
     quantidade = models.IntegerField(default=0)
 
     cor = models.ForeignKey(Cor, null=True, blank=True, on_delete=models.SET_NULL)
@@ -81,6 +81,25 @@ class Pedido(models.Model):
     endereco = models.ForeignKey(Endereco, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para Endereco
 
+    def __str__(self) -> str:
+        return str(f"id_pedido [ {self.id} ] - {self.cliente} - finalizado [ {self.finalizado} ] ")
+    
+    @property
+    def quantidade_total(self):
+        itens_pedido = ItensPedido.objects.filter(pedido_id=self.id)
+        quantidade = sum(
+            [item.quantidade for item in itens_pedido]
+        )
+        return quantidade
+
+    @property
+    def preco_total(self):
+        itens_pedido = ItensPedido.objects.filter(pedido_id=self.id)
+        preco = sum(
+            [item.preco_total for item in itens_pedido]
+        )
+        return preco
+
 class ItensPedido(models.Model):
     quantidade = models.IntegerField(default=0)
 
@@ -88,6 +107,14 @@ class ItensPedido(models.Model):
     # Chave estrangeira para ItemEstoque
     pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para ItemEstoquPedido
+
+    def __str__(self) -> str:
+        itempedido = str(f"id_pedido [ {self.id} ] - produto [ {self.item_estoque.produto.nome}, {self.item_estoque.cor}, {self.item_estoque.modelo} ]")
+        return itempedido
+    
+    @property
+    def preco_total(self):
+        return self.quantidade * self.item_estoque.produto.preco
 
 class Banner(models.Model):
     imagem = models.ImageField(null=True, blank=True)
