@@ -13,7 +13,10 @@ class Cliente(models.Model):
     # DELETE CASCADE!!! CUIDADO!!!
 
     def __str__(self) -> str: # Define o método que mostra o nome no /admin/
-        return str(self.email)
+        if self.email:
+            return str(self.email)
+        else:
+            return f"cliente anônimo"
 
 class Categoria(models.Model): # Celular, fone, carregador, capinha, etc
     nome = models.CharField(max_length=200, null=True, blank=True)
@@ -91,7 +94,7 @@ class Pedido(models.Model):
             [item.quantidade for item in itens_pedido]
         )
         return quantidade
-
+ 
     @property
     def preco_total(self):
         itens_pedido = ItensPedido.objects.filter(pedido_id=self.id)

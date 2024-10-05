@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
+import uuid
 
 # A cada nova pag HTML em /templates uma função com o nome da página 
 # deve ser criada, seguindo o padrão das demais funções. A função deve
@@ -44,20 +45,74 @@ def ver_produto(request, id_produto, id_cor=None):
 def carrinho(request):
     if request.user.is_authenticated:
         cliente = request.user.cliente
+    else:
+        if request.COOKIES.get("id_sessao"):
+            id_sessao = request.COOKIES.get("id_sessao")
+            cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+        else:
+            context = {
+                    "cliente_existente":False,
+                    "itens_pedido": None,
+                    "pedido": None,
+                       }
+            return render(request, 'carrinho.html', context)
     pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
     itens_pedido = ItensPedido.objects.filter(pedido=pedido)
-    context = {"itens_pedido":itens_pedido,
-               "pedido":pedido}
+    context = {
+            "itens_pedido":itens_pedido,
+            "pedido":pedido,
+            "cliente_existente": True,
+            }
     return render(request, 'carrinho.html', context)
 
 def adicionar_carrinho(request, id_produto):
     if request.method == "POST" and id_produto:
         dados = request.POST.dict()
-        print(dados)
         modelo = dados.get("modelo") # Caso o valor nao seja encontrado, retornara None
         id_cor = dados.get("cor")
         if not modelo:
             return redirect('loja')
+        resposta = redirect('carrinho')
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+        else:
+            if request.COOKIES.get("id_sessao"):
+                id_sessao = request.COOKIES.get("id_sessao")
+            else:
+                id_sessao = str(uuid.uuid4())                         # segundos X minutos X horas X dias 
+                resposta.set_cookie(key="id_sessao", value=id_sessao, max_age=60*60*24*30) 
+            cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+        pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+        item_estoque = ItemEstoque.objects.get(produto__id=id_produto, modelo=modelo, cor__id=id_cor)
+        item_pedido, criado = ItensPedido.objects.get_or_create(item_estoque=item_estoque, pedido=pedido)
+        item_pedido.quantidade += 1
+        item_pedido.save() #Salvar toda vez que editar um elemento do banco de dados
+        return resposta
+    else:
+        return redirect('loja')
+
+def remover_carrinho(request, id_produto):
+    if request.method == "POST" and id_produto:
+        dados = request.POST.dict()
+        modelo = dados.get("modelo") # Caso o valor nao seja encontrado, retornara None
+        id_cor = dados.get("cor")
+        if not modelo:
+            return redirect('loja')
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+        else:
+            if request.COOKIES.get("id_sessao"):
+                id_sessao = request.COOKIES.get("id_sessao")
+                cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+            else:
+                return redirect('loja')
+        pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+        item_estoque = ItemEstoque.objects.get(produto__id=id_produto, modelo=modelo, cor__id=id_cor)
+        item_pedido, criado = ItensPedido.objects.get_or_create(item_estoque=item_estoque, pedido=pedido)
+        item_pedido.quantidade -= 1
+        item_pedido.save() #Salvar toda vez que editar um elemento do banco de dados
+        if item_pedido.quantidade <= 0:
+            item_pedido.delete()
         return redirect('carrinho')
     else:
         return redirect('loja')
