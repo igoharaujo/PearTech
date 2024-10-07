@@ -41,7 +41,7 @@ def ver_produto(request, id_produto, id_cor=None):
                 "cor_selecionada": cor_selecionada
                }
     return render(request, "ver_produto.html", context)
-
+ 
 def carrinho(request):
     if request.user.is_authenticated:
         cliente = request.user.cliente
@@ -118,7 +118,46 @@ def remover_carrinho(request, id_produto):
         return redirect('loja')
 
 def checkout(request):
-    return render(request, 'checkout.html')
+    if request.user.is_authenticated:
+        cliente = request.user.cliente
+    else:
+        if request.COOKIES.get("id_sessao"):
+            id_sessao = request.COOKIES.get("id_sessao")
+            cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+        else:
+            return redirect('loja')
+    pedido, criado = Pedido.objects.get_or_create(cliente=cliente, finalizado=False)
+    enderecos = Endereco.objects.filter(cliente=cliente)
+    context = {
+            "pedido":pedido,
+            "enderecos":enderecos,
+            }
+    return render(request, 'checkout.html', context)
+
+def adicionar_endereco(request):
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            cliente = request.user.cliente
+        else:
+            if request.COOKIES.get("id_sessao"):
+                id_sessao = request.COOKIES.get("id_sessao")
+                cliente, criado = Cliente.objects.get_or_create(id_sessao=id_sessao)
+            else:
+                return redirect('loja')
+        dados = request.POST.dict()
+        endereco = Endereco.objects.create(cliente=cliente, 
+                                           rua=dados.get("rua"),
+                                           numero=int(dados.get("numero")),
+                                           estado=dados.get("estado"),
+                                           cidade=dados.get("cidade"),
+                                           cep=dados.get("cep"),
+                                           complemento=dados.get("complemento"),
+                                           )
+        endereco.save()
+        return redirect('checkout')
+    else:
+        context = {}
+        return render(request, 'adicionar_endereco.html', context)
 
 # Funções relacionadas a login e conta do usuario
 def minhaconta(request):

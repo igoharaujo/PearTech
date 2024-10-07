@@ -3,7 +3,7 @@ from .models import (Pedido,
                      Cliente,)
 
 #Funções que serão executadas em todas as páginas 
-
+ 
 #Exibe a quantidade de produtos no carrinho
 def carrinho(request):
     quantidade_produtos_carrinho = 0

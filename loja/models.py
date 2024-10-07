@@ -74,6 +74,9 @@ class Endereco(models.Model):
     cliente = models.ForeignKey(Cliente, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para Cliente
 
+    def __str__(self) -> str:
+        return f"Endereço [{self.id}] de: {str(self.cliente)} - {self.cep}"
+
 class Pedido(models.Model):
     finalizado = models.BooleanField(default=False)
     codigo_transacao = models.CharField(max_length=200, null=True, blank=True)
