@@ -1,6 +1,9 @@
 from .models import (Pedido, 
                      ItensPedido,
-                     Cliente,)
+                     Cliente,
+                     Categoria,
+                     Tipo,
+                     )
 
 #Funções que serão executadas em todas as páginas 
  
@@ -8,7 +11,7 @@ from .models import (Pedido,
 def carrinho(request):
     quantidade_produtos_carrinho = 0
     if request.user.is_authenticated:
-        cliente = request.user.cliente
+        cliente = request.user.cliente 
     else:
         if request.COOKIES.get("id_sessao"):
             id_sessao = request.COOKIES.get("id_sessao")
@@ -20,3 +23,11 @@ def carrinho(request):
     for item in itens_pedido:
         quantidade_produtos_carrinho += item.quantidade
     return {"quantidade_produtos_carrinho":quantidade_produtos_carrinho}
+
+def categorias_tipos(request):
+    categorias_navegacao = Categoria.objects.all()
+    tipos_navegacao = Tipo.objects.all()
+    return {
+            "categorias_navegacao": categorias_navegacao,
+            "tipos_navegacao": tipos_navegacao,
+            }

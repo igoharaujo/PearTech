@@ -20,12 +20,17 @@ class Cliente(models.Model):
 
 class Categoria(models.Model): # Celular, fone, carregador, capinha, etc
     nome = models.CharField(max_length=200, null=True, blank=True)
+    slug = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self) -> str: # Define o método que mostra o nome no /admin/
         return str(self.nome)
 
 class Tipo(models.Model): # Tipo de celular, tipo de fone, tipo de carregador, etc
     nome = models.CharField(max_length=200, null=True, blank=True)
+    slug = models.CharField(max_length=200, null=True, blank=True)
+
+    categoria = models.ForeignKey(Categoria, null=True, blank=True, on_delete=models.SET_NULL)
+    # Chave estrangeira para Categoria
 
     def __str__(self) -> str: # Define o método que mostra o nome no /admin/
         return str(self.nome)
@@ -55,13 +60,13 @@ class ItemEstoque(models.Model):
     quantidade = models.IntegerField(default=0)
 
     cor = models.ForeignKey(Cor, null=True, blank=True, on_delete=models.SET_NULL)
+    # Chave estrangeira para Cor
 
     produto = models.ForeignKey(Produto, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para Produto
 
     def __str__(self) -> str: # Define o método que mostra o nome no /admin/
-        return f"{self.produto.nome} Cor: {self.cor.nome}"
-
+        return f"{self.produto.nome} - Cor: {self.cor.nome} - Modelo: {self.modelo}"
 
 class Endereco(models.Model):
     rua = models.CharField(max_length=400, null=True, blank=True)

@@ -21,18 +21,18 @@
         {% endfor %}
 
 
-        {% if modelos %} <!-- Fazer esta estrutura para MODELOS -->
+        {% if modelos %} 
         <form method="POST" action="{% url 'adicionar_carrinho' produto.id %}">
             {% csrf_token %}
-            <p>Selecione o modelo</p> <!-- Fazer esta estrutura para MODELOS -->
-            {% for modelo in modelos %} <!-- Fazer esta estrutura para MODELOS -->
-            <input type="radio" name="modelo" value="{{modelo}}"><!-- Fazer esta estrutura para MODELOS -->
-            <label for="{{modelo}}">{{modelo}}</label> <!--For deve ter o mesmo valor de Value do input-->
-            {% endfor %} <!-- Fazer esta estrutura para MODELOS -->
+            <p>Selecione o modelo</p> 
+            {% for modelo in modelos %} 
+            <input type="radio" name="modelo" value="{{modelo}}">
+            <label for="{{modelo}}">{{modelo}}</label> 
+            {% endfor %} 
             <input type="hidden" name="cor" value="{{cor_selecionada.id}}">
-            <button type="submit">Adicionar ao Carrinho</button> <!--Type Submit pois ele envia informações, definir no form-->
+            <button type="submit">Adicionar ao Carrinho</button> 
         </form>
-        {% endif %} <!-- Fazer esta estrutura para MODELOS -->
+        {% endif %} 
 
         {% else %}
             <p>Produto fora de estoque</p>
