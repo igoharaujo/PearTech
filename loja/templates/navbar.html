@@ -3,13 +3,6 @@
 <nav>
     <a href="{% url 'homepage' %}">Pear Tech</a> <!-- Em "{ url ' ' }", o que ficará entre ''-->
     <a href="{% url 'loja' %}">Loja</a>
-    <a href="{% url 'login' %}">Login</a>        <!-- é o nome da url que está no arquivo urls.py -->
-    <a href="{% url 'minha_conta' %}">Minha Conta</a>
-    <a href="{% url 'carrinho' %}">Carrinho</a>
-    <img src="{% static 'images/icone_carrinho.png' %}" width="30" height="30">
-    {{quantidade_produtos_carrinho}}
-    
-    <hr>
     <div>
         {% for categoria in categorias_navegacao %}
             <a href="{% url 'loja' %}{{categoria.slug}}">{{categoria.nome}}:</a>
@@ -22,5 +15,18 @@
             <hr>
         {% endfor %}
     </div>
+
+    {% if not request.user.is_authenticated %} <!--Se o usuário NÃO estiver logado no site: -->
+    <a href="{% url 'login' %}">Login</a>        
+    {% else %} <!--Se o usuário estiver logado no site: -->
+    <a href="{% url 'minha_conta' %}">Minha Conta</a>
+    {% endif %}
+    
+    <a href="{% url 'carrinho' %}">Carrinho</a>
+    <img src="{% static 'images/icone_carrinho.png' %}" width="30" height="30">
+    {{quantidade_produtos_carrinho}}
+    
+    <hr>
+    
 
 </nav>

@@ -32,6 +32,8 @@ def loja(request, filtro=None):
     ids_categorias = produtos.values_list("categoria", flat=True).distinct()
     categorias = Categoria.objects.filter(id__in=ids_categorias)
     minimo, maximo = preco_min_max(produtos)
+    ordem = request.GET.get("ordem", "menor-preco")
+    produtos = ordenar_produtos(produtos, ordem)
     context = { 
                 "produtos" : produtos,
                 "minimo": minimo,
@@ -188,5 +190,8 @@ def minhaconta(request):
 
 def login(request):
     return render(request, 'usuario/login.html')
+
+def criar_conta(request):
+    return render(request, "usuario/criarconta.html")
 
 # TODO Sempre que um USER criar uma conta, um cliente será criado para ele

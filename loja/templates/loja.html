@@ -30,6 +30,12 @@
         </form>
         
         <div>
+            Ordenar por:
+            <ul>
+                <li><a href="#" class="item-ordenar" name="menor-preco">Menor Preço</a></li>
+                <li><a href="#" class="item-ordenar" name="maior-preco">Maior Preço</a></li>
+                <li><a href="#" class="item-ordenar" name="mais-vendidos">Mais vendido</a></li>
+            </ul>
             {% for produto in produtos %}
                 <a href="{% url 'ver_produto' produto.id %}">
                     <img src="{{ produto.imagem.url }}" width="330" height="490">

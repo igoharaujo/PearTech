@@ -3,6 +3,16 @@
 
 {% block body %}
 
-    <h3>Login</h3>
+    <h3>Faça seu Login</h3>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="Email"><br>
+        <input type="password" name="senha" placeholder="Senha"><br>
+        <button type="submit">Entrar</button>
+    </form>
+
+    <h4>Não tem uma conta? <a href="{% url 'criar_conta' %}">Criar conta</a></h4>
+    <a href="#">Esqueci minha senha</a>
 
 {% endblock %}

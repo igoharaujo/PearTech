@@ -21,3 +21,16 @@ def preco_min_max(produtos):
         minimo = list(produtos.aggregate(Min("preco")).values())[0]
         minimo = round(minimo, 2)
     return minimo, maximo
+
+def ordenar_produtos(produtos, ordem):
+    if ordem == "menor-preco":
+        produtos = produtos.order_by("preco")
+    elif ordem == "maior-preco":
+        produtos = produtos.order_by("-preco")
+    elif ordem =="mais-vendidos":
+        lista_produtos = []
+        for produto in produtos:
+            lista_produtos.append((produto.total_vendas(), produto))
+        lista_produtos = sorted(lista_produtos, key=lambda x: x[0], reverse=True)
+        produtos = [item[1] for item in lista_produtos]
+    return produtos
