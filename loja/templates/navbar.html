@@ -17,7 +17,7 @@
     </div>
 
     {% if not request.user.is_authenticated %} <!--Se o usuário NÃO estiver logado no site: -->
-    <a href="{% url 'login' %}">Login</a>        
+    <a href="{% url 'fazer_login' %}">Login</a>        
     {% else %} <!--Se o usuário estiver logado no site: -->
     <a href="{% url 'minha_conta' %}">Minha Conta</a>
     {% endif %}

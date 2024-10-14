@@ -2,6 +2,8 @@ from django.db.models import (
                                 Max, 
                                 Min,
                               )
+from django.contrib.auth import login, logout, authenticate
+from django.shortcuts import render, redirect
 
 def filtrar_produtos(produtos, filtro): # Referenciada em views.py -> loja()
     if filtro:
