@@ -11,7 +11,7 @@ from .models import (Pedido,
 def carrinho(request):
     quantidade_produtos_carrinho = 0
     if request.user.is_authenticated:
-        cliente = request.user.cliente 
+        cliente = request.user.cliente
     else:
         if request.COOKIES.get("id_sessao"):
             id_sessao = request.COOKIES.get("id_sessao")
