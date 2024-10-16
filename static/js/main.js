@@ -5,4 +5,3 @@ for (i=0; i< itens.length;  i++) {
     url.searchParams.set("ordem", itens[i].name);
     itens[i].href = url.href;
 };
-
