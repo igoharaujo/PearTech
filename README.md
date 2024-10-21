@@ -45,15 +45,11 @@ Instale todas as dependências necessárias listadas no arquivo `requirements.tx
 Aplique as migrações para configurar o banco de dados com as tabelas definidas nos modelos. Use os comandos `makemigrations` e `migrate`.
 
 
-# Passo 5: Exportar e Importar Dados no Django
+### Passo 5: Exportar e Importar Dados no Django
 
-O Django fornece ferramentas para gerenciar dados em seu banco de dados. Os comandos `dumpdata` e `loaddata` permitem exportar e importar dados de maneira simples e eficiente, facilitando a migração de dados entre ambientes ou o compartilhamento de dados entre desenvolvedores.
+O Django fornece ferramentas para gerenciar dados em seu banco de dados. Os comandos `dumpdata` e `loaddata` permitem exportar e importar dados de maneira simples e eficiente, facilitando a migração de dados entre ambientes ou o compartilhamento de dados entre desenvolvedores. Para exportar dados do seu banco de dados, use o comando `dumpdata`. Este comando gera um arquivo no formato JSON, XML ou YAML que contém todos os dados dos modelos do seu projeto.
 
-## Exportando Dados com `dumpdata`
-
-Para exportar dados do seu banco de dados, use o comando `dumpdata`. Este comando gera um arquivo no formato JSON, XML ou YAML que contém todos os dados dos modelos do seu projeto.
-
-### Sintaxe
+- Sintaxe
 
 ```bash
 #no terminal:
