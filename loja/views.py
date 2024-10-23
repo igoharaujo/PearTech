@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from .models import *
 import uuid
 from .utils import *
-
+from datetime import datetime
 
 # A cada nova pag HTML em /templates uma função com o nome da página 
 # deve ser criada, seguindo o padrão das demais funções. A função deve
@@ -160,9 +160,54 @@ def checkout(request):
     context = {
             "pedido":pedido,
             "enderecos":enderecos,
+            "erro": None,
             }
     return render(request, 'checkout.html', context)
 
+def finalizar_pedido(request, id_pedido):
+    erro = None
+    if request.method == "POST":
+        dados = request.POST.dict()
+        total = dados.get("total")
+        pedido = Pedido.objects.get(id=id_pedido)
+        if total != pedido.preco_total:
+            erro = "preco"
+        if not "endereco" in dados:
+            erro = "endereco"
+        else:
+            endereco = dados.get("endereco")
+            pedido.endereco = endereco
+        # Usuário não está logado 
+        if not request.user.is_authenticated:
+            email = dados.get("email")
+            try:
+                validate_email(email)
+            except ValidationError:
+                erro = "email"
+            if not erro:
+                clientes = Cliente.objects.filter(email=email)
+                if clientes:
+                    pedido.cliente = clientes[0]
+                else:
+                    pedido.cliente.email = email
+                    pedido.cliente.save()
+        codigo_transacao = f"{pedido.id}-{datetime.now().timestamp()}"
+        pedido.codigo_transacao = codigo_transacao
+        pedido.save()
+        if erro:
+            enderecos = Endereco.objects.filter(cliente=pedido.cliente)
+            context = {
+                    "erro": erro,
+                    "pedido": pedido,
+                    "enderecos": enderecos,
+                        }
+            return render(request, "checkout.html", context)
+        else:
+            # TODO pagamento usuário
+            return redirect("checkout")
+    else: 
+        return redirect("loja")
+    
 def adicionar_endereco(request):
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -187,11 +232,86 @@ def adicionar_endereco(request):
     else:
         context = {}
         return render(request, 'adicionar_endereco.html', context)
+    
+def remover_endereco():
+    # TODO fazer toda a lógica de remover um endereço da conta do usuário
+    # TODO add em URLS
+    pass
 
 # Funções relacionadas a login e conta do usuario
 @login_required
-def minhaconta(request):
-    return render(request, 'usuario/minhaconta.html')
+def minha_conta(request):
+    erro = None
+    alterado = False
+    # Verifica se um formulário está sendo enviado
+    if request.method == "POST":
+        dados = request.POST.dict()
+        print(dados)
+        # Verifica se a senha atual está sendo alterada
+        if "senha_atual" in dados:
+            senha_atual = dados.get("senha_atual")
+            nova_senha = dados.get("nova_senha")
+            nova_senha_confirmacao = dados.get("nova_senha_confirmacao")
+
+            #Verifica se a nova senha é igual a confirmação
+            if nova_senha == nova_senha_confirmacao:
+                usuario = authenticate(request, username=request.user.email, password=senha_atual)
+
+                # Verifica se encontou um usuário com a senha que será alterada
+                if usuario:
+                    usuario.set_password(nova_senha)
+                    usuario.save()
+                    alterado = True
+                else:
+                    erro = "senha_incorreta"
+
+            else:
+                erro = "senhas_diferentes"
+
+        # Verifica se as informações pessoais estão sendo alteradas
+        elif "email" in dados:
+            nome = dados.get("nome")
+            email = dados.get("email")
+            telefone = dados.get("telefone")
+
+            # Verifica se o usuario quer modificar o email 
+            if email != request.user.email:
+                usuarios = User.objects.filter(email=email)
+                
+                #Verifica se existe um usuário com o email enviado
+                if len(usuarios) > 0:
+                    erro = "email_existente"
+
+            # Verifica se não houve erro ao enviar o form
+            if not erro:
+                cliente = request.user.cliente
+
+                # Modifica o nome, email e telefone
+                cliente.email = email
+                request.user.email = email
+                request.user.username = email
+                cliente.nome = nome
+                cliente.telefone = telefone
+                cliente.save()
+                request.user.save()
+                alterado = True
+
+        # Caso o usuário deixe de preencher os campos, este erro será acionado
+        else:
+            erro = "formulario_invalido"
+
+    context = {
+                "erro": erro,
+                "alterado": alterado,
+               }
+    return render(request, 'usuario/minha_conta.html', context)
+
+@login_required
+def meus_pedidos(request):
+    cliente = request.user.cliente
+    pedidos = Pedido.objects.filter(finalizado=True, cliente=cliente).order_by("-data_finalizacao")
+    context = {"pedidos": pedidos}
+    return render(request, "usuario/meus_pedidos.html", context)
 
 def fazer_login(request):
     erro = False

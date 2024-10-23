@@ -13,8 +13,10 @@ urlpatterns = [
     path('remover-carrinho/<int:id_produto>/', remover_carrinho, name="remover_carrinho"),
     path('checkout/', checkout, name='checkout'),
     path('adicionar-endereco/', adicionar_endereco, name='adicionar_endereco'),
-    path('minha-conta/', minhaconta, name="minha_conta"),
-
+    path('finalizar-pedido/<int:id_pedido>/', finalizar_pedido, name='finalizar_pedido'),
+    
+    path('minha-conta/', minha_conta, name="minha_conta"),
+    path('meus-pedidos/', meus_pedidos, name="meus_pedidos"),
     path('login/', fazer_login, name="fazer_login"),
     path('criar-conta/', criar_conta, name='criar_conta'),
     path('fazer-logout/', fazer_logout, name='fazer_logout'),

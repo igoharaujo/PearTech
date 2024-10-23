@@ -8,9 +8,25 @@
     <h4>Numero Pedido: {{pedido.id}}</h4>
     <p>Preço Total do Pedido: R${{pedido.preco_total}}</p>
     <p>Total de Produtos: {{pedido.quantidade_total}}</p>
+
+    {% if erro %}
+        {% if erro == "preco" %}
+            <p>Preço dos produtos errado, tente novamente.</p>
+        {% endif %}
+
+        {% if erro == "endereco" %}
+            <p>Selecione um endereço de entrega.</p>
+        {% endif %}
+
+        {% if erro == "email" %}
+            <p>Preencha o email.</p>
+        {% endif %}
+
+    {% endif %}
+
     <hr>
 
-    <form method="POST" action="">
+    <form method="POST" action="{% url 'finalizar_pedido' pedido.id %}">
         {% csrf_token %}
         <h3>Selecione o Endereço de entrega</h3>
         <a href="{% url 'adicionar_endereco' %}">Adicionar Endereço</a>
