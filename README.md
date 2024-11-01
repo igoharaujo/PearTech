@@ -44,24 +44,7 @@ Instale todas as dependências necessárias listadas no arquivo `requirements.tx
 
 Aplique as migrações para configurar o banco de dados com as tabelas definidas nos modelos. Use os comandos `makemigrations` e `migrate`.
 
-
-### Passo 5: Exportar e Importar Dados no Django
-
-O Django fornece ferramentas para gerenciar dados em seu banco de dados. Os comandos `dumpdata` e `loaddata` permitem exportar e importar dados de maneira simples e eficiente, facilitando a migração de dados entre ambientes ou o compartilhamento de dados entre desenvolvedores. Para exportar dados do seu banco de dados, use o comando `dumpdata`. Este comando gera um arquivo no formato JSON, XML ou YAML que contém todos os dados dos modelos do seu projeto.
-
-- Sintaxe
-
-```bash
-#no terminal:
-#Salva todos os dados do banco em um json
-python manage.py dumpdata --output=all_data.json
-
-#Em outra maquina, carrega todos os dados do json no banco.
-python manage.py loaddata all_data.json
-
-```
-
-### Passo 6: Rodar o Servidor de Desenvolvimento
+### Passo 5: Rodar o Servidor de Desenvolvimento
 
 Inicie o servidor de desenvolvimento para testar a aplicação localmente. Use o comando `runserver`.
 
@@ -74,7 +57,6 @@ Crie um arquivo `pytest.ini` na raiz do projeto para configurar o `pytest` com a
 ### Passo 2: Rodar os Testes
 
 Execute os testes automatizados para garantir que todas as funcionalidades estão funcionando corretamente. Use o comando `pytest`.
-
 
 ## Contribuindo
 

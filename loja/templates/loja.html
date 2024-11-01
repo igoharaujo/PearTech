@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load l10n %}
 
 {% block body %}
 
@@ -8,8 +9,8 @@
         <form method="POST" action="">
             {% csrf_token %}
             <p>Preço</p>
-                <input type="number" name="preco_minimo" value={{minimo}}>
-                <input type="number" name="preco_maximo" value={{maximo}}>
+                <input type="number" name="preco_minimo" value=  {% localize on %} {{minimo}} {% endlocalize %}>
+                <input type="number" name="preco_maximo" value={% localize on %} {{maximo}} {% endlocalize %}>
             <p>Modelo</p>
                 {% for modelo in modelos %} 
                     <input type="radio" name="modelo" value="{{modelo}}">

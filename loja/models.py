@@ -69,7 +69,7 @@ class ItemEstoque(models.Model):
 
     produto = models.ForeignKey(Produto, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para Produto
-
+    
     def __str__(self) -> str: # Define o método que mostra o nome no /admin/
         return f"{self.produto.nome} - Cor: {self.cor.nome} - Modelo: {self.modelo}"
 
@@ -126,7 +126,7 @@ class ItensPedido(models.Model):
     item_estoque = models.ForeignKey(ItemEstoque, null=True, blank=True, on_delete=models.SET_NULL)
     # Chave estrangeira para ItemEstoque
     pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
-    # Chave estrangeira para ItemEstoquPedido
+    # Chave estrangeira para Pedido
 
     def __str__(self) -> str:
         itempedido = str(f"id_pedido [ {self.id} ] - produto [ {self.item_estoque.produto.nome}, {self.item_estoque.cor}, {self.item_estoque.modelo} ]")
@@ -143,3 +143,10 @@ class Banner(models.Model):
 
     def __str__(self) -> str:
        return f"{self.link_destino} - Ativo: {self.ativo}" 
+
+class Pagamento(models.Model):
+    id_pagamento = models.CharField(max_length=400)
+    aprovado = models.BooleanField(default=False)
+
+    pedido = models.ForeignKey(Pedido, null=True, blank=True, on_delete=models.SET_NULL)
+    # Chave estrangeira para Pedido

@@ -11,20 +11,18 @@
 
     {% if erro %}
         {% if erro == "preco" %}
-            <p>Preço dos produtos errado, tente novamente.</p>
+            <p>**Preço dos produtos errado, tente novamente.**</p>
         {% endif %}
 
         {% if erro == "endereco" %}
-            <p>Selecione um endereço de entrega.</p>
+            <p>**Selecione um endereço de entrega.**</p>
         {% endif %}
 
         {% if erro == "email" %}
-            <p>Preencha o email.</p>
+            <p>**Preencha o email.**</p>
         {% endif %}
 
     {% endif %}
-
-    <hr>
 
     <form method="POST" action="{% url 'finalizar_pedido' pedido.id %}">
         {% csrf_token %}

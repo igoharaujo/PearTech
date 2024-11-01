@@ -17,7 +17,11 @@
         <input type="number" name="cep" placeholder="CEP"><br>
         <button type="submit">Adicionar Endereço</button>
         <br>
+    </form>
 
+    <form method="POST" action="{% url 'remover_endereco' %}">
+        {% csrf_token %}
+        <button type="submit">Remover Endereço</button>
     </form>
 
 {% endblock %}

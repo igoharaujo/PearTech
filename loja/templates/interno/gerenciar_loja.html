@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+    <h3>Gerenciar Loja</h3>
+
+    <p>Faturamento: {{ faturamento }}</p>
+    <p>Produtos vendidos: {{ qtd_produtos }}</p>
+    <p>Total Pedidos: {{ qtd_pedidos }}</p>
+
+    <hr>
+    <h3>Exportar relatórios</h3>
+    
+    <a href="{% url 'exportar_relatorio' 'pedido' %}">Exportar pedidos</a>
+    <a href="{% url 'exportar_relatorio' 'cliente' %}">Exportar clientes</a>
+    <a href="{% url 'exportar_relatorio' 'endereco' %}">Exportar endereços</a>
+
+{% endblock %}

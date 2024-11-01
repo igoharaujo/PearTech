@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.core.validators import validate_email
@@ -7,6 +8,7 @@ from .models import *
 import uuid
 from .utils import *
 from datetime import datetime
+from .api_mercadopago import criar_pagamento
 
 # A cada nova pag HTML em /templates uma função com o nome da página 
 # deve ser criada, seguindo o padrão das demais funções. A função deve
@@ -169,13 +171,15 @@ def finalizar_pedido(request, id_pedido):
     if request.method == "POST":
         dados = request.POST.dict()
         total = dados.get("total")
+        total = float(total.replace(",", "."))
         pedido = Pedido.objects.get(id=id_pedido)
-        if total != pedido.preco_total:
+        if total != float(pedido.preco_total):
             erro = "preco"
         if not "endereco" in dados:
             erro = "endereco"
         else:
-            endereco = dados.get("endereco")
+            id_endereco = dados.get("endereco")
+            endereco = Endereco.objects.get(id=id_endereco)
             pedido.endereco = endereco
         # Usuário não está logado 
         if not request.user.is_authenticated:
@@ -203,11 +207,40 @@ def finalizar_pedido(request, id_pedido):
                         }
             return render(request, "checkout.html", context)
         else:
-            # TODO pagamento usuário
-            return redirect("checkout")
+            itens_pedido = ItensPedido.objects.filter(pedido=pedido)
+            link= request.build_absolute_uri(reverse('finalizar_pagamento'))
+            link_pagamento, id_pagamento = criar_pagamento(itens_pedido, link)
+            pagamento = Pagamento.objects.create(id_pagamento=id_pagamento, pedido=pedido)
+            pagamento.save()
+            return redirect(link_pagamento)
     else: 
         return redirect("loja")
-    
+
+def finalizar_pagamento(request):
+    dados = request.GET.dict()
+    status = dados.get("status")
+    id_pagamento = dados.get("preference_id")
+    if status == "approved":
+        pagamento = Pagamento.objects.get(id_pagamento=id_pagamento)
+        pagamento.aprovado = True
+        pedido = pagamento.pedido
+        pedido.finalizado = True
+        pedido.data_finalizacao = datetime.now()
+        pedido.save()
+        pagamento.save()
+        enviar_email_compra(pedido)
+        if request.user.is_authenticated:
+            return redirect("meus_pedidos")
+        else:
+            return redirect("pedido_aprovado", pedido.id)
+    else:
+        return redirect("checkout")
+
+def pedido_aprovado(request, id_pedido):
+    pedido = Pedido.objects.get(id=id_pedido)
+    context = {"pedido": pedido}
+    return render(request, "pedido_aprovado.html", context)
+
 def adicionar_endereco(request):
     if request.method == "POST":
         if request.user.is_authenticated:
@@ -233,9 +266,8 @@ def adicionar_endereco(request):
         context = {}
         return render(request, 'adicionar_endereco.html', context)
     
-def remover_endereco():
-    # TODO fazer toda a lógica de remover um endereço da conta do usuário
-    # TODO add em URLS
+def remover_endereco(request):
+    # TODO implementar a lógica de remover endereço 
     pass
 
 # Funções relacionadas a login e conta do usuario
@@ -376,3 +408,33 @@ def criar_conta(request):
 def fazer_logout(request):
     logout(request)
     return redirect('fazer_login')
+
+@login_required
+def gerenciar_loja(request):
+    if request.user.groups.filter(name="equipe").exists():
+        pedidos_finalizados = Pedido.objects.filter(finalizado=True)
+        qtd_pedidos = len(pedidos_finalizados)
+        faturamento = sum(pedido.preco_total for pedido in pedidos_finalizados)
+        qtd_produtos = sum(pedido.quantidade_total for pedido in pedidos_finalizados)
+        context = {
+                    "qtd_pedidos": qtd_pedidos,
+                    "qtd_produtos": qtd_produtos,
+                    "faturamento": faturamento,
+                    }
+        return render(request, "interno/gerenciar_loja.html", context=context)
+    else:
+        redirect('loja')
+
+@login_required
+def exportar_relatorio(request, relatorio):
+    print(relatorio)
+    if request.user.groups.filter(name="equipe").exists():
+        if relatorio == "pedido":
+            informacoes = Pedido.objects.filter(finalizado=True)
+        elif relatorio == "cliente":
+            informacoes = Cliente.objects.all()
+        elif relatorio == "endereco":
+            informacoes = Endereco.objects.all()
+        return exportar_csv(informacoes)
+    else:
+        return redirect('gerenciar_loja')

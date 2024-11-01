@@ -22,6 +22,10 @@
     {% else %} <!--Se o usuário estiver logado no site: -->
     <a href="{% url 'minha_conta' %}">Minha Conta</a>
     {% endif %}
+
+    {% if equipe %}
+        <a href="{% url 'gerenciar_loja' %}">Gerenciar Loja</a>
+    {% endif %}
     
     <a href="{% url 'carrinho' %}">Carrinho</a>
     <img src="{% static 'images/icone_carrinho.png' %}" width="30" height="30">
