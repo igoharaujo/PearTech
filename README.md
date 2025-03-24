@@ -1,5 +1,3 @@
-# Teste
-
 # Projeto de E-commerce
 
 Este projeto é uma aplicação web de e-commerce para a venda de produtos eletrônicos, como smartphones, relógios e acessórios. A aplicação é construída usando o framework Django.
