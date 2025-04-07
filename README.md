@@ -1,4 +1,4 @@
-# Teste
+# Teste.
 
 # Projeto de E-commerce
 

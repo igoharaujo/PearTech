@@ -1,37 +1,75 @@
 {% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pear Tech - Navbar Responsiva</title>
+    <!-- Link para o CSS -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+</head>
+<body>
 
-<nav>
-    <a href="{% url 'homepage' %}">Pear Tech</a> <!-- Em "{ url ' ' }", o que ficará entre ''-->
-    <a href="{% url 'loja' %}">Loja</a>
-    <div>
-        {% for categoria in categorias_navegacao %}
-            <a href="{% url 'loja' %}{{categoria.slug}}">{{categoria.nome}}:</a>
-            <br>
-            {% for tipo in tipos_navegacao %}
-                {% if tipo.categoria == categoria%}
-                    <a href="{% url 'loja' %}{{categoria.slug}}-{{tipo.slug}}">{{tipo.nome}}</a>
-                {% endif %}
+    <!-- Navbar -->
+    <nav>
+        <div class="logo">
+            <a href="{% url 'homepage' %}"><img src="{% static 'images/logo.png' %}" alt="Logo Pear Tech"></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="{% url 'loja' %}">Loja</a></li>
+            {% for categoria in categorias_navegacao %}
+                <li>
+                    <a href="{% url 'loja' %}{{categoria.slug}}">{{categoria.nome}}</a>
+                    <ul class="sub-menu">
+                        {% for tipo in tipos_navegacao %}
+                            {% if tipo.categoria == categoria %}
+                                <li><a href="{% url 'loja' %}{{categoria.slug}}-{{tipo.slug}}">{{tipo.nome}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </li>
             {% endfor %}
-            <br>
-            <br>
-        {% endfor %}
-    </div>
+        </ul>
+        <div class="user-actions">
+            {% if not request.user.is_authenticated %}
+                <a href="{% url 'fazer_login' %}">Login</a>        
+            {% else %}
+                <a href="{% url 'minha_conta' %}">Minha Conta</a>
+            {% endif %}
+            {% if equipe %}
+                <a href="{% url 'gerenciar_loja' %}">Gerenciar Loja</a>
+            {% endif %}
+        </div>
+        <div class="cart-search">
+            <form action="#" class="search-form">
+                <input type="text" placeholder="Pesquisar..." name="q">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            <div class="cart-icon">
+                <a href="{% url 'carrinho' %}">
+                    <img src="{% static 'images/icone_carrinho.png' %}" alt="Carrinho" width="30" height="30">
+                    <span>{{ quantidade_produtos_carrinho }}</span>
+                </a>
+            </div>
+        </div>
+        <!-- Botão de Menu Mobile -->
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
 
-    {% if not request.user.is_authenticated %} <!--Se o usuário NÃO estiver logado no site: -->
-    <a href="{% url 'fazer_login' %}">Login</a>        
-    {% else %} <!--Se o usuário estiver logado no site: -->
-    <a href="{% url 'minha_conta' %}">Minha Conta</a>
-    {% endif %}
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
 
-    {% if equipe %}
-        <a href="{% url 'gerenciar_loja' %}">Gerenciar Loja</a>
-    {% endif %}
-    
-    <a href="{% url 'carrinho' %}">Carrinho</a>
-    <img src="{% static 'images/icone_carrinho.png' %}" width="30" height="30">
-    {{quantidade_produtos_carrinho}}
-    
-    <hr>
-    
-
-</nav>
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
