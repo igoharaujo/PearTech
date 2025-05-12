@@ -1,0 +1,94 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.meus-pedidos-container {
+    max-width: 900px;
+    margin: 60px auto;
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.meus-pedidos-container h3 {
+    margin-bottom: 25px;
+    color: #333333;
+    text-align: center;
+}
+
+.pedido {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.pedido p {
+    font-size: 16px;
+    color: #555555;
+    margin: 5px 0;
+}
+
+.produto-info {
+    display: flex;
+    justify-content: flex-start; /* Organiza os itens à esquerda */
+    align-items: center;
+    margin-top: 10px;
+    border-top: 1px solid #eeeeee;
+    padding-top: 10px;
+}
+
+.produto-info img {
+    width: 60px; /* Tamanho da imagem ajustado */
+    height: 80px; /* Altura proporcional */
+    margin-left: 20px; /* Adiciona espaçamento entre a imagem e o texto */
+    border-radius: 8px;
+    align-self: flex-start;
+    margin-top: 5px; /* Ajusta a posição da imagem para ficar alinhada com o texto */
+}
+
+.produto-info .descricao-produto {
+    flex-grow: 1; /* A descrição do produto ocupa o máximo de espaço disponível */
+    margin-right: 20px; /* Adiciona um pequeno espaço à direita */
+}
+
+.produto-info .descricao-produto p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333333;
+}
+
+.produto-info .quantidade-preco {
+    text-align: right; /* Alinha as informações de quantidade e preço à direita */
+}
+
+.produto-info .quantidade-preco p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333333;
+}
+
+.produto-info .quantidade-preco .quantidade {
+    font-weight: bold;
+    color: #007bff;
+}
+
+a {
+    display: inline-block;
+    margin-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+hr {
+    margin-top: 30px;
+    border: 1px solid #dddddd;
+}

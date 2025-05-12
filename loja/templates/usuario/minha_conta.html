@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block body %}
-
+<link rel="stylesheet" href="{% static '/css/minha_conta.css' %}">
+<div class="minha-conta-container">
     <h3>Minha conta</h3>
 
     <a href="{% url 'meus_pedidos' %}">Meus pedidos</a>
@@ -50,4 +51,5 @@
         <button type="submit">Editar Senha</button><br>
     </form>
     <hr>
+</div>
 {% endblock %}

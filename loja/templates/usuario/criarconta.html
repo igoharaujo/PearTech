@@ -2,33 +2,35 @@
 {% load static %}
 
 {% block body %}
-
-    <h3>Preencha seus dados para criar sua conta</h3>
+<link rel="stylesheet" href="{% static 'css/criarconta.css' %}">
+<div class="criar-conta-container">
+    <h3>Crie sua conta</h3>
 
     {% if erro == "email_invalido" %}
-        <p>Email inválido.</p>
-    {%endif%}
+        <p class="erro">Email inválido.</p>
+    {% endif %}
 
     {% if erro == "usuario_existente" %}
-        <p>Usuário já existente com este email. Faça <a href="{% url 'fazer_login' %}">Login</a></p>
-    {%endif%}
+        <p class="erro">Usuário já existente com este email. Faça <a href="{% url 'fazer_login' %}">Login</a></p>
+    {% endif %}
 
     {% if erro == "senhas_diferentes" %}
-        <p>Senhas diferentes. Tente novamente.</p>
-    {% endif%}
-    
-    {% if erro == "preenchimento" %}
-        <p>Preencha todas as informações do formulário corretamente para criar uma conta.</p>
-    {%endif%}
+        <p class="erro">Senhas diferentes. Tente novamente.</p>
+    {% endif %}
 
-    <form method="POST" action="{% url 'criar_conta'%}">
+    {% if erro == "preenchimento" %}
+        <p class="erro">Preencha todas as informações corretamente para criar uma conta.</p>
+    {% endif %}
+
+    <form method="POST" action="{% url 'criar_conta' %}" class="form-criar-conta">
         {% csrf_token %}
-        <input type="email" name="email" placeholder="Email"><br>
-        <input type="password" name="senha" placeholder="Senha"><br>
-        <input type="password" name="confirmacao_senha" placeholder="Confiramção da Senha"><br>
-        <button type="submit">Criar conta</button>
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="password" name="senha" placeholder="Senha" required><br>
+        <input type="password" name="confirmacao_senha" placeholder="Confirmação da Senha" required><br>
+        <button type="submit" class="botao-criar">Criar conta</button>
     </form>
 
-    <h4>Já tem uma conta? <a href="{% url 'fazer_login' %}">Fazer login</a></h4>
+    <p class="login-link">Já tem uma conta? <a href="{% url 'fazer_login' %}">Fazer login</a></p>
+</div>
 
 {% endblock %}

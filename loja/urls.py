@@ -3,7 +3,7 @@ from django.contrib.auth import views
 from .views import *
 
 urlpatterns = [
-    path('', homepage, name="homepage"), # link, função e nome da página
+    path('', homepage, name="homepage"), 
     path('loja/', loja, name="loja"),
     path('loja/<str:filtro>/', loja, name="loja"),
     path('produto/<int:id_produto>/', ver_produto, name='ver_produto'),
@@ -14,8 +14,8 @@ urlpatterns = [
     path('checkout/', checkout, name='checkout'),
     path('adicionar-endereco/', adicionar_endereco, name='adicionar_endereco'),
     path('remover-endereco/', remover_endereco, name='remover_endereco'), # TODO Revisar views
-    path('finalizar-pedido/<int:id_pedido>/', finalizar_pedido, name='finalizar_pedido'),
-    path('finalizar-pagamento/', finalizar_pagamento, name='finalizar_pagamento'),
+    # path('finalizar-pedido/<int:id_pedido>/', finalizar_pedido, name='finalizar_pedido'),
+    # path('finalizar-pagamento/', finalizar_pagamento, name='finalizar_pagamento'),
     path('pedido-aprovado/<int:id_pedido>/', pedido_aprovado, name='pedido_aprovado'),
     
     path('minha-conta/', minha_conta, name="minha_conta"),
@@ -36,7 +36,3 @@ urlpatterns = [
     path("reset/done/", views.PasswordResetCompleteView.as_view(), name="password_reset_complete"),
 ]
 
-# path('loja/<str:nome_categoria>/', loja, name="loja")
-
-# Sempre que houver um parâmetro como '<str:nome_categoria>', ele 
-# deve ser adicionado na chamada da função correspondente ao url

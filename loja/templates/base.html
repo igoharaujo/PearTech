@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PearTech</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -14,5 +14,47 @@
 
     {% endblock %}
     <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
-</body>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>Pear Tech</h4>
+                <p>Encontre tecnologia de ponta e qualidade com preços justos. Produtos originais com garantia.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Produtos</h4>
+                <ul>
+                    <li><a href="#">Smartphones</a></li>
+                    <li><a href="#">Acessórios</a></li>
+                    <li><a href="#">Fones de Ouvido</a></li>
+                    <li><a href="#">Smart Watch</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Links Úteis</h4>
+                <ul>
+                    <li><a href="{% url 'minha_conta' %}">Minha Conta</a></li>
+                    {% if not request.user.is_authenticated %}
+                        <li><a href="{% url 'fazer_login' %}">Login</a></li>
+                    {% else %}
+                        <li><a href="{% url 'minha_conta' %}">Login</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'loja' %}">Loja</a></li>
+                    <li><a href="{% url 'carrinho' %}">Carrinho</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <ul>
+                    <li>📍 Braília, DF - Brasil</li>
+                    <li>📧 contato@peartch.com</li>
+                    <li>📞 (61) 98284-9117</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 Pear Tech. Todos os direitos reservados.
+        </div>
+    </footer>
+    
 </html>

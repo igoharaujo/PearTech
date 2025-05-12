@@ -1,37 +1,32 @@
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 
-<nav>
-    <a href="{% url 'homepage' %}">Pear Tech</a> <!-- Em "{ url ' ' }", o que ficará entre ''-->
+<nav class="navbar">
+    <a href="{% url 'homepage' %}" class="logo">Pear Tech</a>
     <a href="{% url 'loja' %}">Loja</a>
-    <div>
-        {% for categoria in categorias_navegacao %}
-            <a href="{% url 'loja' %}{{categoria.slug}}">{{categoria.nome}}:</a>
-            <br>
-            {% for tipo in tipos_navegacao %}
-                {% if tipo.categoria == categoria%}
-                    <a href="{% url 'loja' %}{{categoria.slug}}-{{tipo.slug}}">{{tipo.nome}}</a>
-                {% endif %}
-            {% endfor %}
-            <br>
-            <br>
-        {% endfor %}
-    </div>
 
-    {% if not request.user.is_authenticated %} <!--Se o usuário NÃO estiver logado no site: -->
-    <a href="{% url 'fazer_login' %}">Login</a>        
-    {% else %} <!--Se o usuário estiver logado no site: -->
-    <a href="{% url 'minha_conta' %}">Minha Conta</a>
+    {% for categoria in categorias_navegacao %}
+        <div class="dropdown">
+            <a href="{% url 'loja' %}{{ categoria.slug }}" class="dropbtn">{{ categoria.nome }}</a>
+            <div class="dropdown-content">
+                <!-- {% for tipo in tipos_navegacao %}
+                    {% if tipo.categoria == categoria %}
+                        <a href="{% url 'loja' %}{{ categoria.slug }}-{{ tipo.slug }}">{{ tipo.nome }}</a>
+                    {% endif %}
+                {% endfor %} -->
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if not request.user.is_authenticated %}
+        <a href="{% url 'fazer_login' %}">Login</a>
+    {% else %}
+        <a href="{% url 'minha_conta' %}">Minha Conta</a>
     {% endif %}
 
     {% if equipe %}
         <a href="{% url 'gerenciar_loja' %}">Gerenciar Loja</a>
     {% endif %}
-    
-    <a href="{% url 'carrinho' %}">Carrinho</a>
-    <img src="{% static 'images/icone_carrinho.png' %}" width="30" height="30">
-    {{quantidade_produtos_carrinho}}
-    
-    <hr>
-    
 
+    <a href="{% url 'carrinho' %}">Carrinho ({{quantidade_produtos_carrinho}})</a>
 </nav>

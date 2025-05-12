@@ -2,26 +2,34 @@
 {% load static %}
 
 {% block body %}
-
+<link rel="stylesheet" href="{% static '/css/meus_pedidos.css' %}">
+<div class="meus-pedidos-container">
     <h3>Meus Pedidos</h3>
-    
+
     {% for pedido in pedidos %}
-    <div style="display: flex;">
-        <p>Data: {{pedido.data_finalizacao}}, </p>
-        <p>ID Pedido: {{pedido.id}}, </p>
-        <p>Preço: {{pedido.preco_total}}, </p>
-        <p>Endereço: {{pedido.endereco.cep}}, {{pedido.endereco.cidade}}-{{pedido.endereco.estado}}</p>
+    <div class="pedido">
+        <p><strong>Data:</strong> {{pedido.data_finalizacao}}, </p>
+        <p><strong>ID Pedido:</strong> {{pedido.id}}, </p>
+        <p><strong>Preço:</strong> {{pedido.preco_total}}, </p>
+        <p><strong>Endereço:</strong> {{pedido.endereco.cep}}, {{pedido.endereco.cidade}}-{{pedido.endereco.estado}}</p>
     
         {% for item in pedido.itens %}
-            <img src="{{item.item_estoque.produto.imagem.url}}" alt="" width="50" height="75">
-            <p>Produto: {{item.item_estoque.produto.nome}}</p>
-            <p>Quantidade: {{item.quantidade}}</p>
-            <p>Preço: {{item.preco_total}}</p>
+        <div class="produto-info">
+            <img src="{{item.item_estoque.produto.imagem.url}}" alt="Imagem do Produto" height="100" width="80">
+            <div class="descricao-produto">
+                <p><strong>Produto:</strong> {{item.item_estoque.produto.nome}}</p>
+                <p><strong>Descrição:</strong> {{item.item_estoque.produto.descricao}}</p>
+            </div>
+            <div class="quantidade-preco">
+                <p><strong>Quantidade:</strong> {{item.quantidade}}</p>
+                <p><strong>Preço:</strong> {{item.preco_total}}</p>
+            </div>
+        </div>
         {% endfor %}
     </div>
     <hr>
     {% endfor %}
 
     <a href="{% url 'minha_conta' %}">Minha conta</a>
-
+</div>
 {% endblock %}

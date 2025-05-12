@@ -1,0 +1,49 @@
+.criar-conta-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.criar-conta-container h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-criar-conta input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.botao-criar {
+    width: 100%;
+    padding: 10px;
+    background-color: #0056b3;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.botao-criar:hover {
+    background-color: #0056b3;
+}
+
+.erro {
+    color: red;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+}

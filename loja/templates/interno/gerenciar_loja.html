@@ -2,18 +2,24 @@
 {% load static %}
 
 {% block body %}
-
+<link rel="stylesheet" href="{% static 'css/gerenciarloja.css' %}">
+<div class="gerenciar-container">
     <h3>Gerenciar Loja</h3>
 
-    <p>Faturamento: {{ faturamento }}</p>
-    <p>Produtos vendidos: {{ qtd_produtos }}</p>
-    <p>Total Pedidos: {{ qtd_pedidos }}</p>
+    <div class="info-bloco">
+        <p><strong>Faturamento:</strong> R$ {{ faturamento }}</p>
+        <p><strong>Produtos vendidos:</strong> {{ qtd_produtos }}</p>
+        <p><strong>Total de Pedidos:</strong> {{ qtd_pedidos }}</p>
+    </div>
 
     <hr>
-    <h3>Exportar relatórios</h3>
-    
-    <a href="{% url 'exportar_relatorio' 'pedido' %}">Exportar pedidos</a>
-    <a href="{% url 'exportar_relatorio' 'cliente' %}">Exportar clientes</a>
-    <a href="{% url 'exportar_relatorio' 'endereco' %}">Exportar endereços</a>
+
+    <h3>Exportar Relatórios</h3>
+    <div class="botoes-exportar">
+        <a href="{% url 'exportar_relatorio' 'pedido' %}" class="botao-exportar">Exportar Pedidos</a>
+        <a href="{% url 'exportar_relatorio' 'cliente' %}" class="botao-exportar">Exportar Clientes</a>
+        <a href="{% url 'exportar_relatorio' 'endereco' %}" class="botao-exportar">Exportar Endereços</a>
+    </div>
+</div>
 
 {% endblock %}

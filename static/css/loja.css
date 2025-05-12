@@ -1,0 +1,129 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.loja-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    text-align: center;
+    color: #333333;
+    margin-bottom: 40px;
+}
+
+.filter-form {
+    width: 250px;
+    padding: 20px;
+    margin-right: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filter-form p {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.filter-form input[type="number"],
+.filter-form input[type="radio"] {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.filter-form label {
+    font-size: 14px;
+    color: #333333;
+    margin-left: 5px;
+}
+
+.filter-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filter-form button:hover {
+    background-color: #0056b3;
+}
+
+.produtos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.produto-item {
+    width: 320px;
+    margin-bottom: 30px;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.produto-item:hover {
+    transform: translateY(-10px);
+}
+
+.produto-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.produto-item p {
+    font-size: 14px;
+    color: #555555;
+    margin-top: 10px;
+}
+
+.produto-item .preco {
+    font-size: 16px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.item-ordenar {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.item-ordenar:hover {
+    text-decoration: underline;
+}
+
+.item-ordenar.active {
+    font-weight: bold;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+ul li {
+    margin-bottom: 10px;
+}
+
