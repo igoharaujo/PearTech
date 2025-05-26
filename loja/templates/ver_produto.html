@@ -2,41 +2,96 @@
 {% load static %}
 
 {% block body %}
+<link rel="stylesheet" href="{% static 'css/ver_produto.css' %}">
 
-<h3>{{ produto.nome }}</h3>
+<div class="produto-container">
+    <!-- Imagens do Produto -->
+    <div class="produto-imagens">
+        <div class="imagem-principal">
+            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+        </div>
+    </div>
 
-    {% if tem_estoque %}
-        <img src="{{ produto.imagem.url }}" width="330" height="490">
-        <p>Produto: {{ produto.nome }}</p>
-        <p>Preço: {{ produto.preco }}</p>
+    <!-- Detalhes do Produto -->
+    <div class="produto-detalhes">
+        <h2>{{ produto.nome }}</h2>
 
-        {% if cor_selecionada %}
-            Cor: {{cor_selecionada.nome}}
-        {%endif%}
+        <!-- Avaliação -->
+        <div class="avaliacao">
+            <span> ★ ★ ★ ★ ★</span>
+            <span>4.5/5</span>
+        </div>
 
-        {% for cor in cores %}
-            <a href="{% url 'ver_produto' produto.id cor.id %}">
-                <i class="fa-solid fa-circle" style="color: {{cor.codigo}}"></i>
-            </a>
-        {% endfor %}
+        <!-- Preço -->
+        <p class="preco">R$ {{ produto.preco }}</p>
 
+        <!-- Linha Horizontal -->
+        <hr>
 
-        {% if modelos %} 
+        <!-- Opções de Cor -->
+        <div class="opcoes-cor">
+            <label for="cor">Cor:</label>
+            <div class="cores">
+                {% for cor in cores %}
+                    <input type="radio" id="cor-{{ cor.id }}" name="cor" value="{{ cor.id }}" {% if cor_selecionada and cor_selecionada.id == cor.id %}checked{% endif %}>
+                    <label for="cor-{{ cor.id }}"></label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Linha Horizontal -->
+        <hr>
+
+        <!-- Opções de Armazenamento -->
+        <div class="opcoes-armazenamento">
+            <label for="armazenamento">Armazenamento:</label>
+            <div class="armazenamentos">
+                {% for modelo in modelos %}
+                    <button type="button" data-modelo-id="{{ modelo.id }}" onclick="selecionarModelo(this)">
+                        {{ modelo }}
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Linha Horizontal -->
+        <hr>
+
+        <!-- Quantidade e Botão Adicionar ao Carrinho -->
         <form method="POST" action="{% url 'adicionar_carrinho' produto.id %}">
             {% csrf_token %}
-            <p>Selecione o modelo</p> 
-            {% for modelo in modelos %} 
-            <input type="radio" name="modelo" value="{{modelo}}">
-            <label for="{{modelo}}">{{modelo}}</label> 
-            {% endfor %} 
-            <input type="hidden" name="cor" value="{{cor_selecionada.id}}">
-            <button type="submit">Adicionar ao Carrinho</button> 
-        </form>
-        {% endif %} 
+            <input type="hidden" name="modelo" id="modelo-selecionado" value="">
+            <input type="hidden" name="cor" id="cor-selecionada" value="{{ cor_selecionada.id }}">
 
-        {% else %}
-            <p>Produto fora de estoque</p>
-            
-    {% endif %}
+            <div class="quantidade-control">
+                <button type="button" class="btn-quantidade" onclick="ajustarQuantidade(-1)">-</button>
+                <input type="number" name="quantidade" id="quantidade" value="1" min="1" max="99" class="quantidade-input" readonly>
+                <button type="button" class="btn-quantidade" onclick="ajustarQuantidade(1)">+</button>
+            </div>
+
+            <button type="submit" class="add-carrinho-btn">Adicionar ao Carrinho</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Função para selecionar o modelo clicado
+    function selecionarModelo(btn) {
+        const botoes = btn.parentElement.querySelectorAll('button');
+        botoes.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('modelo-selecionado').value = btn.getAttribute('data-modelo-id');
+    }
+
+    // Função para ajustar a quantidade
+    function ajustarQuantidade(delta) {
+        const input = document.getElementById('quantidade');
+        let valor = parseInt(input.value);
+        valor += delta;
+        if (valor < 1) valor = 1;
+        if (valor > 99) valor = 99;
+        input.value = valor;
+    }
+</script>
 
 {% endblock %}

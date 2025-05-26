@@ -1,14 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block body %}
 <link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+
 <div class="homepage-banners">
-    {% for banner in banners %}
-        <a href="{% url 'loja' %}{{ banner.link_destino }}">
-            <img src="{{ banner.imagem.url }}" alt="" height="450" width="650"> 
-        </a>
-    {% endfor %}    
+    <!-- Primeira linha com 2 banners -->
+    <div class="banner-row">
+        {% for banner in banners|slice:":2" %}
+            <a href="{% url 'loja' %}{{ banner.link_destino }}" class="banner-link">
+                <img src="{{ banner.imagem.url }}" alt="{{ banner.titulo }}" class="banner-img">
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Segunda linha com 2 banners -->
+    <div class="banner-row">
+        {% for banner in banners|slice:"2:4" %}
+            <a href="{% url 'loja' %}{{ banner.link_destino }}" class="banner-link">
+                <img src="{{ banner.imagem.url }}" alt="{{ banner.titulo }}" class="banner-img">
+            </a>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -3,66 +3,63 @@
 
 {% block body %}
 <link rel="stylesheet" href="{% static 'css/carrinho.css' %}">
-    <div class="carrinho-container">
-        <h3>Carrinho</h3>
 
-        {% if cliente_existente %}
+<div class="carrinho-container">
+    <h2>Carrinho</h2>
 
-            <div class="pedido-info">
-                <h4>Numero Pedido: {{pedido.id}}</h4>
-                <p>Preço Total do Pedido: <strong>R${{pedido.preco_total}}</strong></p>
-                <p>Total de Produtos: {{pedido.quantidade_total}}</p>
-            </div>
+    {% if cliente_existente %}
+        <div class="pedido-info">
+            <p><strong>Número do Pedido:</strong> {{ pedido.id }}</p>
+            <p><strong>Preço Total:</strong> R$ {{ pedido.preco_total }}</p>
+            <p><strong>Total de Produtos:</strong> {{ pedido.quantidade_total }}</p>
+        </div>
 
-            <hr>
+        <hr>
 
-            <div class="itens-carrinho">
-                {% for item in itens_pedido %}
-                    <div class="item-carrinho">
-                        <div class="item-imagem">
-                            <img src="{{ item.item_estoque.produto.imagem.url }}" alt="{{ item.item_estoque.produto.nome }}" width="120" height="180">
-                        </div>
-                        <div class="item-descricao">
-                            <p>Produto: {{item.item_estoque.produto.nome}}</p>
-                            <p>Cor: {{item.item_estoque.cor}}</p>
-                            <p>Modelo: {{item.item_estoque.modelo}}</p>
+        <div class="itens-carrinho">
+            {% for item in itens_pedido %}
+                <div class="item-carrinho">
+                    <div class="item-imagem">
+                        <img src="{{ item.item_estoque.produto.imagem.url }}" alt="{{ item.item_estoque.produto.nome }}" width="120" height="180">
+                    </div>
+                    <div class="item-descricao">
+                        <h4>{{ item.item_estoque.produto.nome }}</h4>
+                        <p><strong>Cor:</strong> {{ item.item_estoque.cor }}</p>
+                        <p><strong>Modelo:</strong> {{ item.item_estoque.modelo }}</p>
 
-                            <div class="quantidade-preco">
-                                <div class="quantidade">
-                                    Quantidade: 
-                                    <form method="POST" action="{% url 'remover_carrinho' item.item_estoque.produto.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="modelo" value="{{item.item_estoque.modelo}}">
-                                        <input type="hidden" name="cor" value="{{item.item_estoque.cor.id}}">
-                                        <button type="submit">-</button>
-                                    </form>
-                                    {{item.quantidade}} 
-                                    <form method="POST" action="{% url 'adicionar_carrinho' item.item_estoque.produto.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="modelo" value="{{item.item_estoque.modelo}}">
-                                        <input type="hidden" name="cor" value="{{item.item_estoque.cor.id}}">
-                                        <button type="submit">+</button>
-                                    </form>
-                                </div>
-                                <p>Preço Unitário: <strong>R${{item.item_estoque.produto.preco}}</strong></p>
-                                <p>Total: <strong>R${{item.preco_total}}</strong></p>
-                            </div>
+                        <div class="quantidade-preco">
+                            <form method="POST" action="{% url 'remover_carrinho' item.item_estoque.produto.id %}" class="form-quantidade">
+                                {% csrf_token %}
+                                <input type="hidden" name="modelo" value="{{ item.item_estoque.modelo }}">
+                                <input type="hidden" name="cor" value="{{ item.item_estoque.cor.id }}">
+                                <button type="submit" class="btn-quantidade">-</button>
+                            </form>
+
+                            <span class="qtd">{{ item.quantidade }}</span>
+
+                            <form method="POST" action="{% url 'adicionar_carrinho' item.item_estoque.produto.id %}" class="form-quantidade">
+                                {% csrf_token %}
+                                <input type="hidden" name="modelo" value="{{ item.item_estoque.modelo }}">
+                                <input type="hidden" name="cor" value="{{ item.item_estoque.cor.id }}">
+                                <button type="submit" class="btn-quantidade">+</button>
+                            </form>
+
+                            <p class="preco-unitario"><strong>R$ {{ item.item_estoque.produto.preco }}</strong></p>
+                            <p class="preco-total"><strong>Total: R$ {{ item.preco_total }}</strong></p>
                         </div>
                     </div>
-                    <hr>
-                {% endfor %}
-            </div>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
 
-            <div class="checkout">
-                <a href="" class="btn-checkout">Checkout</a>
-                <!-- <a href="{% url 'checkout' %}" class="btn-checkout">Checkout</a> -->
-            </div>
+        <div class="checkout">
+            <a href="{% url 'checkout' %}" class="btn-checkout">Finalizar Compra</a>
+        </div>
 
-        {% else %}
-
-            <h3>Seu carrinho está vazio</h3>
-            <a href="{% url 'loja' %}" class="btn-voltar">Visite nossa loja</a>
-
-        {% endif %}
-    </div>
+    {% else %}
+        <h3>Seu carrinho está vazio.</h3>
+        <a href="{% url 'loja' %}" class="btn-voltar">Visite nossa loja</a>
+    {% endif %}
+</div>
 {% endblock %}

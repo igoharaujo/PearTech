@@ -1,32 +1,47 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+<!-- Font Awesome (opcional, para ícones) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css ">
 
 <nav class="navbar">
-    <a href="{% url 'homepage' %}" class="logo">Pear Tech</a>
-    <a href="{% url 'loja' %}">Loja</a>
+    <!-- Logo à esquerda -->
+    <div class="logo">
+        <a href="{% url 'homepage' %}">
+            <img src="{% static 'images/1 - Logo preta sem fundo.jpg' %}" alt="Pear Tech Logo">
+        </a>
+    </div>
 
-    {% for categoria in categorias_navegacao %}
-        <div class="dropdown">
-            <a href="{% url 'loja' %}{{ categoria.slug }}" class="dropbtn">{{ categoria.nome }}</a>
-            <div class="dropdown-content">
-                <!-- {% for tipo in tipos_navegacao %}
-                    {% if tipo.categoria == categoria %}
-                        <a href="{% url 'loja' %}{{ categoria.slug }}-{{ tipo.slug }}">{{ tipo.nome }}</a>
-                    {% endif %}
-                {% endfor %} -->
-            </div>
-        </div>
-    {% endfor %}
+    <!-- Menu central -->
+    <ul class="menu">
+        <li><a href="{% url 'loja' %}">SMARTPHONE</a></li>
+        <li><a href="{% url 'loja' %}">WATCH</a></li>
+        {% for categoria in categorias_navegacao %}
+            <li class="dropdown">
+                <a href="{% url 'loja' %}{{ categoria.slug }}" class="dropbtn">{{ categoria.nome|upper }}</a>
+                <div class="dropdown-content">
+                    {% for tipo in tipos_navegacao %}
+                        {% if tipo.categoria == categoria %}
+                            <a href="{% url 'loja' %}{{ categoria.slug }}-{{ tipo.slug }}">{{ tipo.nome }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 
-    {% if not request.user.is_authenticated %}
-        <a href="{% url 'fazer_login' %}">Login</a>
-    {% else %}
-        <a href="{% url 'minha_conta' %}">Minha Conta</a>
-    {% endif %}
-
-    {% if equipe %}
-        <a href="{% url 'gerenciar_loja' %}">Gerenciar Loja</a>
-    {% endif %}
-
-    <a href="{% url 'carrinho' %}">Carrinho ({{quantidade_produtos_carrinho}})</a>
+    <!-- Ícones à direita -->
+    <div class="navbar-right">
+        <a href="#" class="icon search-icon" title="Buscar"><i class="fas fa-search"></i></a>
+        <a href="{% url 'carrinho' %}" class="icon cart-icon" title="Carrinho">
+            <i class="fas fa-shopping-cart"></i>
+            {% if quantidade_produtos_carrinho > 0 %}
+                <span class="cart-badge">{{ quantidade_produtos_carrinho }}</span>
+            {% endif %}
+        </a>
+        {% if not request.user.is_authenticated %}
+            <a href="{% url 'fazer_login' %}" class="icon user-icon" title="Login"><i class="fas fa-user"></i></a>
+        {% else %}
+            <a href="{% url 'minha_conta' %}" class="icon account-icon" title="Minha Conta"><i class="fas fa-user-circle"></i></a>
+        {% endif %}
+    </div>
 </nav>

@@ -5,60 +5,89 @@
 {% block body %}
 <link rel="stylesheet" href="{% static 'css/loja.css' %}">
 
-    <div class="loja-container">
-        <h3>Loja</h3>
+<div class="loja-container">
+    <h2>Loja</h2>
 
-        <div style="display: flex;">
-            <!-- Formulário de filtros -->
-            <form class="filter-form" method="POST" action="">
+    <div class="loja-content">
+        <!-- Sidebar de Filtros -->
+        <aside class="filters-sidebar">
+            <form class="filter-form" method="POST">
                 {% csrf_token %}
-                <p>Preço</p>
-                <input type="number" name="preco_minimo" value=  {% localize on %} {{minimo}} {% endlocalize %}>
-                <input type="number" name="preco_maximo" value={% localize on %} {{maximo}} {% endlocalize %}>
                 
-                <p>Modelo</p>
-                {% for modelo in modelos %} 
-                    <input type="radio" name="modelo" value="{{modelo}}">
-                    <label for="{{modelo}}">{{modelo}}</label> 
-                {% endfor %} 
+                <h4>Filtrar por:</h4>
 
-                <p>Categoria</p>
-                {% for categoria in categorias %}
-                    <input type="radio" name="categoria" value="{{categoria.slug}}">
-                    <label for="{{categoria}}">{{categoria.nome}}</label>
-                {% endfor %}
+                <!-- Faixa de Preço -->
+                <div class="filter-group">
+                    <label for="preco_minimo">Preço</label>
+                    <input type="number" name="preco_minimo" placeholder="Mínimo" value="{% localize on %}{{ minimo }}{% endlocalize %}">
+                    <input type="number" name="preco_maximo" placeholder="Máximo" value="{% localize on %}{{ maximo }}{% endlocalize %}">
+                </div>
 
-                <p>Tipo</p>
-                {% for tipo in tipos_navegacao %}
-                    <input type="radio" name="tipo" value="{{tipo.slug}}">
-                    <label for="{{tipo.slug}}">{{tipo.nome}}</label>
-                {% endfor %}
-
-                <br>
-                <button type="submit">Aplicar Filtros</button>
-            </form>
-        
-            <!-- Ordenação e produtos -->
-            <div>
-                <div>Ordenar por:</div>
-                <ul>
-                    <li><a href="#" class="item-ordenar" name="menor-preco">Menor Preço</a></li>
-                    <li><a href="#" class="item-ordenar" name="maior-preco">Maior Preço</a></li>
-                    <li><a href="#" class="item-ordenar" name="mais-vendidos">Mais vendido</a></li>
-                </ul>
-
-                <div class="produtos-container">
-                    {% for produto in produtos %}
-                        <div class="produto-item">
-                            <a href="{% url 'ver_produto' produto.id %}">
-                                <img src="{{ produto.imagem.url }}" width="330" height="490" alt="{{ produto.nome }}">
-                            </a>
-                            <p>Produto: {{ produto.nome }}</p>
-                            <p class="preco">Preço: {{ produto.preco }}</p>
+                <!-- Modelo -->
+                <div class="filter-group">
+                    <label>Modelo</label>
+                    {% for modelo in modelos %}
+                        <div class="checkbox-group">
+                            <input type="radio" id="modelo-{{ modelo }}" name="modelo" value="{{ modelo }}">
+                            <label for="modelo-{{ modelo }}">{{ modelo }}</label>
                         </div>
                     {% endfor %}
                 </div>
+
+                <!-- Categoria -->
+                <div class="filter-group">
+                    <label>Categoria</label>
+                    {% for categoria in categorias %}
+                        <div class="checkbox-group">
+                            <input type="radio" id="categoria-{{ categoria.slug }}" name="categoria" value="{{ categoria.slug }}">
+                            <label for="categoria-{{ categoria.slug }}">{{ categoria.nome }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Tipo -->
+                <div class="filter-group">
+                    <label>Tipo</label>
+                    {% for tipo in tipos_navegacao %}
+                        <div class="checkbox-group">
+                            <input type="radio" id="tipo-{{ tipo.slug }}" name="tipo" value="{{ tipo.slug }}">
+                            <label for="tipo-{{ tipo.slug }}">{{ tipo.nome }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Botão Aplicar -->
+                <button type="submit" class="apply-button">Aplicar Filtros</button>
+            </form>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Ordenação -->
+            <div class="sort-options">
+                <span>Ordenar por:</span>
+                <ul>
+                    <li><a href="#" class="item-ordenar" data-order="menor-preco">Menor Preço</a></li>
+                    <li><a href="#" class="item-ordenar" data-order="maior-preco">Maior Preço</a></li>
+                    <li><a href="#" class="item-ordenar" data-order="mais-vendidos">Mais Vendidos</a></li>
+                </ul>
             </div>
-        </div>
+
+            <!-- Grid de Produtos -->
+            <div class="produtos-container">
+                {% for produto in produtos %}
+                    <div class="produto-card">
+                        <a href="{% url 'ver_produto' produto.id %}">
+                            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                        </a>
+                        <h3>{{ produto.nome }}</h3>
+                        <p class="preco">R$ {{ produto.preco|unlocalize }}</p>
+                    </div>
+                {% empty %}
+                    <p>Nenhum produto encontrado.</p>
+                {% endfor %}
+            </div>
+        </main>
     </div>
+</div>
 {% endblock %}
